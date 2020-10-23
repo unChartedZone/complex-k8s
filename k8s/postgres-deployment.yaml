@@ -12,8 +12,22 @@ spec:
       labels:
         component: postgres
     spec:
+      volumes:
+        - name: postgres-storage
+          persistentVolumeClaim:
+            claimName: database-persistent-volume-claim
       containers:
         - name: postgres
           image: postgres
+          env:
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: pgpassword
+                  key: PGPASSWORD
           ports:
             - containerPort: 5432
+          volumeMounts:
+            - name: postgres-storage # Should be the same as the name under volumes
+              mountPath: /var/lib/postgresql/data
+              subPath: postgres # Tells k8s to store data in folder called postgres
