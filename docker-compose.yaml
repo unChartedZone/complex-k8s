@@ -1,0 +1,13 @@
+version: "3"
+services:
+  postgres:
+    image: "postgres:latest"
+  redis:
+    image: "redis:latest"
+  server:
+    build:
+      dockerfile: Dockerfile.dev
+      context: ./server # Tell docker where the dockerfile is and where the code is
+    volumes:
+      - /app/node_modules # Dont override this folder
+      - ./server:/app
